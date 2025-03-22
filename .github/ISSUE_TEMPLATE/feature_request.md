@@ -4,8 +4,7 @@ about: Suggest an idea for this project
 title: ''
 labels: feature 🚀
 assignees: ''
-project:
-    - "PulseVault Project"
+projects: ['users/MarcosSerra1/projects/2']
 
 ---
 
