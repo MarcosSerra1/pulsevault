@@ -4,7 +4,8 @@ about: Suggest an idea for this project
 title: ''
 labels: feature 🚀
 assignees: ''
-projects: ['2']
+projects:
+    - '2'
 
 ---
 
