@@ -46,19 +46,19 @@ jobs:
     - name: Set up Docker Compose
       run: |
         sudo apt-get update
-        sudo apt-get install -y docker-compose-plugin
+        sudo apt-get install -y docker-compose
         docker compose version
     
     - name: Docker Compose Validation
-      run: docker compose config
+      run: docker-compose config
       
     - name: Build Docker Images
-      run: docker compose build
+      run: docker-compose build
       
     - name: Test Docker Compose Up
       run: |
         docker compose up -d
         sleep 30  # Aguarda 30 segundos para os serviços iniciarem
-        docker compose ps
-        docker compose logs
-        docker compose down
+        docker-compose ps
+        docker-compose logs
+        docker-compose down
