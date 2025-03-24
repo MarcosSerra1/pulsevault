@@ -43,22 +43,28 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Docker Compose
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Docker info
       run: |
-        sudo apt-get update
-        sudo apt-get install -y docker-compose
-        docker compose version
-    
+        docker version
+        docker info
+
     - name: Docker Compose Validation
-      run: docker-compose config
+      run: docker compose config
       
     - name: Build Docker Images
-      run: docker-compose build
+      run: docker compose build --no-cache
       
     - name: Test Docker Compose Up
       run: |
         docker compose up -d
-        sleep 30  # Aguarda 30 segundos para os serviços iniciarem
-        docker-compose ps
-        docker-compose logs
-        docker-compose down
+        echo "Aguardando serviços iniciarem..."
+        sleep 30
+        echo "Verificando status dos containers..."
+        docker compose ps
+        echo "Verificando logs dos containers..."
+        docker compose logs
+        echo "Parando containers..."
+        docker compose down
