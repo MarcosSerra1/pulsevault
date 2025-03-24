@@ -44,7 +44,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Setup environment
-    - run: |
+      run: |
         cp .env.ci .env
         cat .env
 
