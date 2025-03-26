@@ -1,10 +1,16 @@
 asgiref==3.8.1
 Django==5.1.7
+django-filter==25.1
 djangorestframework==3.15.2
+djangorestframework_simplejwt==5.5.0
+flake8==7.1.1
 Markdown==3.7
+mccabe==0.7.0
 psycopg==3.2.6
 psycopg-binary==3.2.6
+pycodestyle==2.12.1
+pyflakes==3.2.0
+PyJWT==2.9.0
 python-decouple==3.8
 sqlparse==0.5.3
 typing_extensions==4.12.2
-gunicorn==23.0.0
