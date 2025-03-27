@@ -67,3 +67,48 @@ class CustomUserManagerTests(TestCase):
         )
 
         self.assertEqual(str(user), 'test@example.com')
+
+    def test_user_password_is_hashed(self):
+        """Testa se a senha está sendo hasheada corretamente"""
+        password = 'testPass123'
+        user = self.User.objects.create_user(
+            email='test@example.com',
+            password=password,
+            name='Test User'
+        )
+
+        # Verifica se a senha foi hasheada
+        self.assertNotEqual(user.password, password)
+        self.assertTrue(user.password.startswith('pbkdf2_sha256$'))
+
+        # Verifica se a senha pode ser verificada
+        self.assertTrue(user.check_password(password))
+
+    def test_duplicate_email(self):
+        """Testa se não é possível criar usuários com mesmo email"""
+        self.User.objects.create_user(
+            email='test@example.com',
+            password='testpass123'
+        )
+
+        with self.assertRaises(Exception):
+            self.User.objects.create_user(
+                email='test@example.com',
+                password='different123'
+            )
+
+    def test_password_change(self):
+        """Testa alteração de senha"""
+        user = self.User.objects.create_user(
+            email='test@example.com',
+            password='oldpass123'
+        )
+
+        # Altera a senha
+        user.set_password('newpass123')
+        user.save()
+
+        # Verifica se a senha antiga não funciona mais
+        self.assertFalse(user.check_password('oldpass123'))
+        # Verifica se a nova senha funciona
+        self.assertTrue(user.check_password('newpass123'))

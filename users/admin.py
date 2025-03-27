@@ -5,7 +5,7 @@ from .models import CustomUser
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
-    list_display = ['email', 'name', 'is_staff', 'created_at', 'updated_at']
+    list_display = ['email', 'name', 'is_active', 'created_at', 'updated_at']
     readonly_fields = ('created_at', 'updated_at')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
