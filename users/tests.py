@@ -67,3 +67,19 @@ class CustomUserManagerTests(TestCase):
         )
 
         self.assertEqual(str(user), 'test@example.com')
+
+    def test_user_password_is_hashed(self):
+        """Testa se a senha está sendo hasheada corretamente"""
+        password = 'testPass123'
+        user = self.User.objects.create_user(
+            email='test@example.com',
+            password=password,
+            name='Test User'
+        )
+
+        # Verifica se a senha foi hasheada
+        self.assertNotEqual(user.password, password)
+        self.assertTrue(user.password.startswith('pbkdf2_sha256$'))
+
+        # Verifica se a senha pode ser verificada
+        self.assertTrue(user.check_password(password))
