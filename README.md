@@ -1,6 +1,6 @@
 # PulseVault 💰
 
-O PulseVault é uma API RESTful para gerenciamento de finanças pessoais.
+O PulseVault é uma API RESTful para gerenciamento de finanças pessoais, permitindo controle de receitas, despesas e orçamentos de forma organizada e segura.
 
 ## 🚀 Tecnologias
 
@@ -16,6 +16,46 @@ O PulseVault é uma API RESTful para gerenciamento de finanças pessoais.
 - Docker
 - Docker Compose
 - Git
+- Python 3.12+
+
+## 🏗️ Estrutura do Projeto
+
+```
+pulsevault/
+├── common/           # Modelos e utilitários compartilhados
+│   ├── models.py     # Modelos base e específicos
+│   ├── admin.py      # Configurações do admin
+│   └── tests.py      # Testes unitários
+├── core/            # Configurações do projeto
+├── users/           # Gestão de usuários
+├── api/             # Views e endpoints da API
+├── scripts/         # Scripts úteis
+└── docker/          # Configurações Docker
+```
+
+## 📦 Modelos
+
+### BaseModel
+- Campos compartilhados por todos os modelos
+- Gestão por usuário
+- Controle de ativo/inativo
+- Timestamps automáticos
+
+### Category
+- Categorização de transações
+- Tipos: Receita/Despesa
+- Slug automático
+- Unique por usuário+nome+tipo
+
+### Bank
+- Cadastro de bancos
+- Código bancário único por usuário
+- Normalização de nomes
+
+### PaymentMethod
+- Formas de pagamento
+- Específico por usuário
+- Gestão de status ativo
 
 ## 🛠️ Instalação
 
@@ -25,58 +65,73 @@ git clone https://github.com/seu-usuario/pulsevault.git
 cd pulsevault
 ```
 
-2. Configure as variáveis de ambiente:
+2. Configure o ambiente virtual:
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+```
+
+3. Instale as dependências:
+```bash
+pip install -r requirements.txt
+```
+
+4. Configure as variáveis de ambiente:
 ```bash
 cp env.example .env
 ```
 
-3. Inicie os containers:
+5. Execute as migrações:
 ```bash
-docker compose up -d
+python manage.py migrate
 ```
 
-4. Acesse:
-- API: http://localhost
-- Admin: http://localhost/admin
-
-## 🔧 Desenvolvimento
-
-Para executar os testes:
+6. Crie um superusuário:
 ```bash
-docker compose exec web python manage.py test
+python manage.py createsuperuser
 ```
 
-Para verificar o código com Flake8:
+## 🧪 Testes
+
+Execute os testes unitários:
 ```bash
-docker compose exec web flake8
+python manage.py test
 ```
 
-## 📦 Estrutura do Projeto
-
-```
-pulsevault/
-├── core/              # Configurações do projeto
-├── api/               # Aplicação principal
-├── scripts/          # Scripts úteis
-├── tests/            # Testes
-└── docker/           # Arquivos Docker
+Verificação de estilo:
+```bash
+flake8
 ```
 
 ## 🤝 Contribuindo
 
-1. Faça um Fork do projeto
-2. Crie sua Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'feat: add some AmazingFeature'`)
-4. Push para a Branch (`git push origin feature/AmazingFeature`)
+1. Faça um Fork
+2. Crie sua Feature Branch:
+```bash
+git checkout -b feature/NomeFeature
+```
+
+3. Commits devem seguir Conventional Commits:
+```bash
+git commit -m "feat(escopo): descrição"
+git commit -m "fix(escopo): descrição"
+git commit -m "docs(escopo): descrição"
+```
+
+4. Push para sua branch:
+```bash
+git push origin feature/NomeFeature
+```
+
 5. Abra um Pull Request
 
 ## 📝 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Projeto sob licença MIT. Veja [LICENSE](LICENSE) para detalhes.
 
 ## ✨ Autor
 
 * **Marcos Serra** - [GitHub](https://github.com/seu-usuario)
 
 ---
-⌨️ [Marcos Serra](https://github.com/seu-usuario)
+⌨️ com ❤️ por [Marcos Serra](https://github.com/seu-usuario)
