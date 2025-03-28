@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     # My Apps
     'users',
     'common',
+    'transactions',
 ]
 
 MIDDLEWARE = [
