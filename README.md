@@ -131,7 +131,7 @@ Projeto sob licença MIT. Veja [LICENSE](LICENSE) para detalhes.
 
 ## ✨ Autor
 
-* **Marcos Serra** - [GitHub](https://github.com/seu-usuario)
+* **Marcos Serra** - [GitHub](https://github.com/MarcosSerra1)
 
 ---
-⌨️ com ❤️ por [Marcos Serra](https://github.com/seu-usuario)
+⌨️ com ❤️ por [Marcos Serra](https://github.com/MarcosSerra1)
