@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.utils.text import slugify
 from users.models import CustomUser
@@ -59,6 +60,7 @@ class BaseModel(models.Model):
         abstract: True (não gera tabela)
         unique_together: Garante unicidade de (name, user)
     """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name='ID')
     name = models.CharField(max_length=255, verbose_name='Nome')
     description = models.CharField(max_length=255, null=True, blank=True, verbose_name='Descrição')
     is_active = models.BooleanField(default=True, verbose_name='Ativo')
