@@ -17,12 +17,6 @@ class BaseAdmin(admin.ModelAdmin):
             return qs
         return qs.filter(user=request.user)
 
-    def save_model(self, request, obj, form, change):
-        """Associa o usuário logado ao registro ao salvar"""
-        if not change:  # Apenas em criação
-            obj.user = request.user
-        super().save_model(request, obj, form, change)
-
     def has_change_permission(self, request, obj=None):
         """Permite edição apenas para superuser ou dono do registro"""
         if not obj or request.user.is_superuser:

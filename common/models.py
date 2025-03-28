@@ -67,7 +67,8 @@ class BaseModel(models.Model):
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
-        verbose_name='Usuário'
+        verbose_name='Usuário',
+        blank=True
     )
     objects = UserSpecificManager()
 

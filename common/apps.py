@@ -5,3 +5,6 @@ class CommonConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "common"
     verbose_name = 'Módulos Compartilhados'
+
+    def ready(self):
+        import common.signals
