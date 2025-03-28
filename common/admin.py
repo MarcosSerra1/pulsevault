@@ -10,6 +10,31 @@ class BaseAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at', 'updated_at')
     ordering = ('name',)
 
+    def get_queryset(self, request):
+        """Filtra registros por usuário se não for superuser"""
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(user=request.user)
+
+    def save_model(self, request, obj, form, change):
+        """Associa o usuário logado ao registro ao salvar"""
+        if not change:  # Apenas em criação
+            obj.user = request.user
+        super().save_model(request, obj, form, change)
+
+    def has_change_permission(self, request, obj=None):
+        """Permite edição apenas para superuser ou dono do registro"""
+        if not obj or request.user.is_superuser:
+            return True
+        return obj.user == request.user
+
+    def has_delete_permission(self, request, obj=None):
+        """Permite exclusão apenas para superuser ou dono do registro"""
+        if not obj or request.user.is_superuser:
+            return True
+        return obj.user == request.user
+
 
 @admin.register(Category)
 class CategoryAdmin(BaseAdmin):
