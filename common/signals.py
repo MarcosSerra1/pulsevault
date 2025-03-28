@@ -1,38 +1,20 @@
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from django.contrib.auth import get_user_model
-from django.db.models import Model
 from django.core.exceptions import ValidationError
-from threading import local
-
-_thread_locals = local()
-
-
-def set_current_user(user):
-    """Armazena o usuário atual no thread local"""
-    _thread_locals.user = user
-
-
-def get_current_user():
-    """Recupera o usuário atual do thread local"""
-    return getattr(_thread_locals, 'user', None)
+from .middleware import CURRENT_USER
 
 
 @receiver(pre_save)
 def set_user_on_save(sender, instance, **kwargs):
     """
-    Signal que associa automaticamente o usuário logado ao objeto sendo salvo.
+    Signal thread-safe para associar usuário automaticamente.
 
-    Attributes:
-        sender: Modelo que está sendo salvo
-        instance: Instância do objeto sendo salvo
-        **kwargs: Argumentos adicionais
+    Usa contextvars para garantir isolamento entre requisições.
     """
-    # Verifica se o modelo herda de BaseModel e não tem usuário definido
     from .models import BaseModel
     if isinstance(instance, BaseModel) and not instance.user_id:
-        user = get_current_user()
-        if user:
+        user = CURRENT_USER.get()
+        if user and user.is_authenticated:
             instance.user = user
         else:
-            raise ValidationError('Nenhum usuário logado encontrado')
+            raise ValidationError('Usuário não encontrado no contexto atual')

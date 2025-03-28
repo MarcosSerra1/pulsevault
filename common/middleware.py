@@ -1,14 +1,26 @@
-from .signals import set_current_user
+from django.utils.deprecation import MiddlewareMixin
+from django.core.exceptions import MiddlewareNotUsed
+from contextvars import ContextVar
+
+# Contexto global para o usuário atual
+CURRENT_USER = ContextVar('current_user', default=None)
 
 
-class CurrentUserMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
+class CurrentUserMiddleware(MiddlewareMixin):
+    """
+    Middleware para gerenciar o usuário atual de forma thread-safe.
 
-    def __call__(self, request):
-        # Armazena o usuário atual
+    Usa contextvars para garantir isolamento entre requisições.
+    """
+    def process_request(self, request):
+        """Armazena o usuário atual no contexto"""
         if hasattr(request, 'user'):
-            set_current_user(request.user)
+            CURRENT_USER.set(request.user)
 
-        response = self.get_response(request)
+    def process_response(self, request, response):
+        """Limpa o contexto após a resposta"""
+        try:
+            CURRENT_USER.set(None)
+        except LookupError:
+            pass
         return response
