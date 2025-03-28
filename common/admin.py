@@ -17,7 +17,7 @@ class CategoryAdmin(BaseAdmin):
     list_display = ('name', 'type', 'user', 'is_active', 'created_at')
     list_filter = BaseAdmin.list_filter + ('type', 'user')
     search_fields = BaseAdmin.search_fields + ('user__email',)
-    raw_id_fields = ('user',)
+    raw_id_fields = ('user',)  # Melhor performance para seleção de usuário
 
     def get_queryset(self, request):
         """Otimiza consulta com select_related"""
