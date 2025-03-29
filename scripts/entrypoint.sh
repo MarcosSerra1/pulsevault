@@ -24,7 +24,7 @@ python manage.py collectstatic --noinput
 
 # Verificar e criar superusuário se necessário
 echo "🟡 Verificando e criando superusuário se necessário..."
-if [ -z "${DJANGO_SUPERUSER_USERNAME}" ] || [ -z "${DJANGO_SUPERUSER_EMAIL}" ] || [ -z "${DJANGO_SUPERUSER_PASSWORD}" ]; then
+if [ -z "${DJANGO_SUPERUSER_EMAIL}" ] || [ -z "${DJANGO_SUPERUSER_PASSWORD}" ]; then
     echo "Erro: variáveis de ambiente do superusuário não estão definidas."
     exit 1
 fi
@@ -32,11 +32,10 @@ fi
 python manage.py shell <<EOF
 from django.contrib.auth import get_user_model
 User = get_user_model()
-if not User.objects.filter(username="${DJANGO_SUPERUSER_USERNAME}").exists():
+if not User.objects.filter(email="${DJANGO_SUPERUSER_EMAIL}").exists():
     User.objects.create_superuser(
-        "${DJANGO_SUPERUSER_USERNAME}",
-        "${DJANGO_SUPERUSER_EMAIL}",
-        "${DJANGO_SUPERUSER_PASSWORD}"
+        email="${DJANGO_SUPERUSER_EMAIL}",
+        password="${DJANGO_SUPERUSER_PASSWORD}"
     )
 EOF
 check_command "criação de superusuário"
@@ -46,8 +45,3 @@ echo "🟢 Superuser criado com sucesso"
 echo "🟢 Iniciando servidor Gunicorn..."
 gunicorn core.wsgi:application --bind 0.0.0.0:8000
 check_command "início do servidor Gunicorn"
-
-# Iniciar o servidor
-# echo "🟢 Iniciando servidor Django..."
-# python manage.py runserver 0.0.0.0:8000
-# check_command "início do servidor Django"
