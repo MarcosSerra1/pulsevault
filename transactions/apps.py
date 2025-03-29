@@ -4,4 +4,8 @@ from django.apps import AppConfig
 class TransactionsConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "transactions"
-    verbose_name = 'Transações'
+    verbose_name = 'Transação'
+    verbose_name_plural = 'Transações'
+
+    def ready(self):
+        import transactions.signals
