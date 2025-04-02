@@ -1,10 +1,17 @@
 from rest_framework import generics
+from rest_framework.throttling import AnonRateThrottle
 from django.http import JsonResponse
 from .models import CustomUser
 from .serializers import CustomUserSerializer, ListUserSerializer
 
 
+# CustomThrottle é uma classe de limitação de taxa personalizada
+class CustomThrottle(AnonRateThrottle):
+    scope = 'create_user'  # Define o escopo para a limitação de taxa
+
+
 class CustomUserCreateView(generics.CreateAPIView):
+    throttle_classes = [CustomThrottle]  # Limita a criação de usuários
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
 
