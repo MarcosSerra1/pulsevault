@@ -46,6 +46,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'core.middleware.CurrentUserMiddleware',
+    'users.middleware.UserAuditMiddleware',
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -108,6 +109,11 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter',
     ),
+    # Previne ataques de força bruta limitando tentativas.
+    'DEFAULT_THROTTLE_RATES': {
+        'create_user': '5/hour',  # 5 criações por hora
+        'login': '3/minute',  # 3 tentativas por minuto
+    }
 }
 
 SIMPLE_JWT = {
@@ -143,6 +149,11 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
+]
+
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher',  # Mais seguro e moderno
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',  # Fallback
 ]
 
 # ------------------------------------------------------------
@@ -191,17 +202,28 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'file': {
+        'debug_file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR / 'debug.log',
         },
+        'audit_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'audit.log',
+        },
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
+            'handlers': ['debug_file'],
             'level': 'DEBUG',
             'propagate': True,
         },
+        'users.middleware': {
+            'handlers': ['audit_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
     },
 }
+# ------------------------------------------------------------
