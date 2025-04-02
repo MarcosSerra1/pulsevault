@@ -79,7 +79,7 @@ class CustomUserManagerTests(TestCase):
 
         # Verifica se a senha foi hasheada
         self.assertNotEqual(user.password, password)
-        self.assertTrue(user.password.startswith('pbkdf2_sha256$'))
+        self.assertTrue(user.password.startswith('argon2'))
 
         # Verifica se a senha pode ser verificada
         self.assertTrue(user.check_password(password))
