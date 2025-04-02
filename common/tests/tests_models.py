@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from users.models import CustomUser
-from .models import Category, Bank, PaymentMethod
+from common.models import Category, Bank, PaymentMethod
 
 
 class BaseTestCase(TestCase):
