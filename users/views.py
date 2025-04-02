@@ -1,12 +1,17 @@
 from rest_framework import generics
 from django.http import JsonResponse
 from .models import CustomUser
-from .serializers import CustomUserSerializer
+from .serializers import CustomUserSerializer, ListUserSerializer
 
 
-class CustomUserCreateListView(generics.ListCreateAPIView):
+class CustomUserCreateView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+
+
+class CustomUserListView(generics.ListAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = ListUserSerializer
 
 
 class CustomUserRetriveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
