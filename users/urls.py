@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import CustomUserCreateListView, CustomUserRetriveUpdateDestroyView
+from .views import CustomUserCreateView, CustomUserListView, CustomUserRetriveUpdateDestroyView
 
 
 urlpatterns = [
-    path('users/', CustomUserCreateListView.as_view(), name='users-create-list'),
-    path('users/<uuid:pk>/', CustomUserRetriveUpdateDestroyView.as_view(), name='users-detail-view'),
+    path('users/register/', CustomUserCreateView.as_view(), name='user-create'),
+    path('users/list/', CustomUserListView.as_view(), name='user-list'),
+    path('users/<uuid:pk>/', CustomUserRetriveUpdateDestroyView.as_view(), name='user-detail-view'),
 ]
