@@ -28,9 +28,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, max_length=255, verbose_name='Email')
     name = models.CharField(max_length=150, blank=True, verbose_name='Nome')
     is_active = models.BooleanField(default=True, verbose_name='Ativo')
-    is_staff = models.BooleanField(default=False, verbose_name='Equipe')
+    is_staff = models.BooleanField(default=True, verbose_name='Equipe')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Editado em')
+    previous_password_hash = models.CharField(max_length=128, blank=True, null=True, verbose_name='Hash da senha anterior')
     groups = models.ManyToManyField('auth.Group', blank=True, related_name='custom_user_set', related_query_name='custom_user', verbose_name='Grupos')
     user_permissions = models.ManyToManyField('auth.Permission', blank=True, related_name='custom_user_set', related_query_name='custom_user', verbose_name='Permissões do usuário')
     USERNAME_FIELD = 'email'
