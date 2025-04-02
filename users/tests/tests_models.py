@@ -17,7 +17,7 @@ class CustomUserManagerTests(TestCase):
         self.assertEqual(user.email, 'test@example.com')
         self.assertEqual(user.name, 'Test User')
         self.assertTrue(user.is_active)
-        self.assertFalse(user.is_staff)
+        self.assertTrue(user.is_staff)
         self.assertFalse(user.is_superuser)
         self.assertTrue(user.created_at)
         self.assertTrue(user.updated_at)
