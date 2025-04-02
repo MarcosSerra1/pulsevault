@@ -10,6 +10,8 @@ O PulseVault é uma API RESTful para gerenciamento de finanças pessoais, permit
 - PostgreSQL
 - Docker e Docker Compose
 - Nginx
+- Argon2 para hash de senhas
+- JWT para autenticação
 
 ## 📋 Pré-requisitos
 
@@ -22,40 +24,51 @@ O PulseVault é uma API RESTful para gerenciamento de finanças pessoais, permit
 
 ```
 pulsevault/
-├── common/           # Modelos e utilitários compartilhados
-│   ├── models.py     # Modelos base e específicos
-│   ├── admin.py      # Configurações do admin
-│   └── tests.py      # Testes unitários
-├── core/            # Configurações do projeto
 ├── users/           # Gestão de usuários
-├── api/             # Views e endpoints da API
-├── scripts/         # Scripts úteis
-└── docker/          # Configurações Docker
+│   ├── models.py     # Modelo CustomUser
+│   ├── validators.py # Validadores de senha
+│   ├── serializers.py# Serializers REST
+│   ├── views.py     # Views da API
+│   ├── middleware.py# Middleware de auditoria
+│   └── tests/       # Testes unitários
+├── common/          # Modelos compartilhados
+├── transactions/    # Gestão financeira
+├── core/           # Configurações do projeto
+└── scripts/        # Scripts úteis
 ```
 
-## 📦 Modelos
+## 📦 Modelos Principais
 
-### BaseModel
-- Campos compartilhados por todos os modelos
-- Gestão por usuário
-- Controle de ativo/inativo
-- Timestamps automáticos
+### CustomUser
+- UUID como identificador primário
+- Email como login
+- Validação forte de senha
+- Histórico de senhas anteriores
+- Auditoria de ações
 
-### Category
-- Categorização de transações
-- Tipos: Receita/Despesa
-- Slug automático
-- Unique por usuário+nome+tipo
+### Validadores de Senha
+- Mínimo 8 caracteres
+- Letras maiúsculas e minúsculas
+- Números e caracteres especiais
+- Prevenção de partes do email/nome
+- Histórico de senhas anteriores
 
-### Bank
-- Cadastro de bancos
-- Código bancário único por usuário
-- Normalização de nomes
+### Segurança
+- Rate limiting para criação/login
+- Argon2 para hash de senhas
+- JWT para autenticação
+- Middleware de auditoria
+- Logs estruturados
 
-### PaymentMethod
-- Formas de pagamento
-- Específico por usuário
-- Gestão de status ativo
+## 🔒 Endpoints de Usuário
+
+```
+POST /api/v1/users/register/    # Criação de usuário
+GET  /api/v1/users/list/        # Listagem de usuários
+GET  /api/v1/users/<uuid>/      # Detalhes do usuário
+PUT  /api/v1/users/<uuid>/      # Atualização de usuário
+DEL  /api/v1/users/<uuid>/      # Remoção de usuário
+```
 
 ## 🛠️ Instalação
 
@@ -65,43 +78,38 @@ git clone https://github.com/seu-usuario/pulsevault.git
 cd pulsevault
 ```
 
-2. Configure o ambiente virtual:
-```bash
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-```
-
-3. Instale as dependências:
-```bash
-pip install -r requirements.txt
-```
-
-4. Configure as variáveis de ambiente:
+2. Configure o ambiente:
 ```bash
 cp env.example .env
+# Configure as variáveis no .env
 ```
 
-5. Execute as migrações:
+3. Execute com Docker:
 ```bash
-python manage.py migrate
-```
-
-6. Crie um superusuário:
-```bash
-python manage.py createsuperuser
+docker compose up -d
 ```
 
 ## 🧪 Testes
 
-Execute os testes unitários:
+Execute os testes:
 ```bash
+# Todos os testes
 python manage.py test
+
+# Apenas testes de usuários
+python manage.py test users.tests
 ```
 
 Verificação de estilo:
 ```bash
 flake8
 ```
+
+## 📊 Monitoramento
+
+Logs disponíveis:
+- `debug.log`: Logs gerais do sistema
+- `audit.log`: Auditoria de ações dos usuários
 
 ## 🤝 Contribuindo
 
@@ -113,9 +121,9 @@ git checkout -b feature/NomeFeature
 
 3. Commits devem seguir Conventional Commits:
 ```bash
-git commit -m "feat(escopo): descrição"
-git commit -m "fix(escopo): descrição"
-git commit -m "docs(escopo): descrição"
+git commit -m "feat(users): adiciona validação de senha"
+git commit -m "fix(auth): corrige rate limiting"
+git commit -m "docs(api): atualiza documentação"
 ```
 
 4. Push para sua branch:
@@ -134,4 +142,4 @@ Projeto sob licença MIT. Veja [LICENSE](LICENSE) para detalhes.
 * **Marcos Serra** - [GitHub](https://github.com/MarcosSerra1)
 
 ---
-⌨️ com ❤️ por [Marcos Serra](https://github.com/MarcosSerra1)
+⌨️ por [Marcos Serra](https://github.com/MarcosSerra1)
